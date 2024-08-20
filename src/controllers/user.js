@@ -21,10 +21,10 @@ const register = async (req, res, next) => {
 }
 const login = async (req, res, next) => {
     try {
-        // const user = await fetchUser(req.body);
+        const user = await fetchUser(req.body);
 
-        // if (!user)
-        //     throw createHttpError[404]("Invalid credentials");
+        if (!user)
+            throw createHttpError[404]("Invalid credentials");
 
         const accessToken = await signAccessToken(user.id);
         const refreshToken = await signRefreshToken(user.id);

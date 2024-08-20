@@ -7,6 +7,9 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 // default api
+app.get('/', (req, res) => {
+  res.send('Your project is runing ...!!');
+})
 app.get('/helloworld', (req, res) => {
   res.send('Hello World!');
 })

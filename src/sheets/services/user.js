@@ -148,24 +148,24 @@ const fetchUserByIb = (id) => {
             if (!rows || rows.length < 1)
                 return reject(createHttpError[404]("User not found"));
 
-            const matchingRows = rows.filter(row =>
-                row[0] === id
-            );
+            const matchingRows = rows.find(row => row[0] === id);
 
-            if (matchingRows.length < 1)
+            if (!matchingRows)
                 return reject(createHttpError[404]("User not found"));
+
             return resolve({
-                id: matchingRows[0][0],
-                name: matchingRows[0][1],
-                email: matchingRows[0][2],
-                age: matchingRows[0][3],
+                id: matchingRows[0],
+                name: matchingRows[1],
+                email: matchingRows[2],
+                age: matchingRows[3],
             });
         } catch (err) {
             console.error('FetchUserById error:', err);
-            return reject(err)
+            return reject(err);
         }
-    })
-}
+    });
+};
+
 const fetchUsersList = () => {
     return new Promise(async (resolve, reject) => {
         const auth = await authenticate();

@@ -166,6 +166,43 @@ const fetchUserByIb = (id) => {
     });
 };
 
+const fetchUserById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sheetId = SPREADSHEET_ID; // Replace with your Sheet ID
+            const gid = "0"; // Replace with the GID of your sheet tab
+
+            const query = `select A, B, C, D where A='${id}'`; // Adjust columns and conditions as needed
+            const encodedQuery = encodeURIComponent(query);
+
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq=${encodedQuery}&gid=${gid}`;
+
+            const response = await fetch(url);
+            const text = await response.text();
+
+            // Remove the extra text Google adds to the response
+            const json = JSON.parse(text.substr(47).slice(0, -2));
+
+            if (!json.table.rows.length) {
+                return reject(createHttpError[404]("User not found"));
+            }
+
+            const row = json.table.rows[0].c;
+
+            return resolve({
+                id: row[0]?.v,
+                name: row[1]?.v,
+                email: row[2]?.v,
+                age: row[3]?.v,
+            });
+        } catch (err) {
+            console.error('FetchUserById error:', err);
+            return reject(err);
+        }
+    });
+};
+
+
 const fetchUsersList = () => {
     return new Promise(async (resolve, reject) => {
         const auth = await authenticate();
@@ -200,4 +237,4 @@ const fetchUsersList = () => {
     })
 }
 
-export { insertData, fetchUser, fetchUsersList, fetchUserByIb, updateUser };
+export { insertData, fetchUser, fetchUsersList, fetchUserById, updateUser };

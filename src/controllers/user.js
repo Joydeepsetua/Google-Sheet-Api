@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import { signAccessToken, signRefreshToken } from '../helper/jwt.js';
-import { fetchUser, fetchUsersList, insertData, fetchUserByIb, updateUser } from '../sheets/services/user.js';
+import { fetchUser, fetchUsersList, insertData, fetchUserById, updateUser } from '../sheets/services/user.js';
 
 const register = async (req, res, next) => {
     try {
@@ -90,7 +90,7 @@ const editUser = async (req, res, next) => {
 const user = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const user = await fetchUserByIb(id);
+        const user = await fetchUserById(id);
         res.status(200).json({
             status: 200,
             message: "User fetch successfully",

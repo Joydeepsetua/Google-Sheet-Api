@@ -2,11 +2,6 @@
 
 To insert data (name, email, and age) into the last row of a Spreadsheet using the Google Sheets API in Node.js, follow the steps below.
 
-## Prerequisites
-
-Make sure you have:
-- A service account JSON key file for authentication.
-- The `googleapis` package installed in your Node.js project.
 
 ### Step-by-Step Guide to Enable Google Sheets API and Set Up Node.js Project
 
@@ -32,6 +27,18 @@ Make sure you have:
    - Click on the **"Create Credentials"** button.
    - Choose either **"OAuth client ID"** or **"Service Account"** based on your use case.
      - **For a simple public script**, a **Service Account** is easier as it doesn’t require user login.
+   - Enter Service account details then Click on the **"Create And Continue"** button.
+   - Click on the **"Continue"** button.
+   - Click on the **"Continue"** button.
+   - Click on the **"Done"** button.
+
+7. **Download JSON File**:
+   - Navigate Service Account Details page, Onlick your Service Account.
+   - Click on the **"KEYS"** tab > **"Create new key"**.
+   - Select key type **"JSON"**.
+   - Click on the **"CREATE"** button.
+   - A service account JSON key file is downloaded.
+
 
 ## Step 2: Install Google API Client Library
 

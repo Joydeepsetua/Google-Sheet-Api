@@ -1,7 +1,9 @@
 import 'dotenv/config'
 import express from 'express';
 import createHttpError from 'http-errors';
-import userRoute from './src/routes/user.js'
+import userRoute from './src/routes/user.js';
+import orderRoute from './src/routes/order.js';
+import productRoute from './src/routes/product.js';
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
@@ -16,6 +18,8 @@ app.get('/helloworld', (req, res) => {
 
 //routes
 app.use(userRoute);
+app.use(productRoute);
+app.use(orderRoute);
 
 
 // This route does not exist

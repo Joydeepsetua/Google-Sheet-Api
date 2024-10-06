@@ -1,5 +1,18 @@
-import { fetchUserOrderByBuyerId } from "../sheets/services/order.js";
+import { fetchUserOrderByBuyerId, insertOrder } from "../sheets/services/order.js";
 
+
+const createOrder = async (req, res, next) => {
+    try {
+        const order = await insertOrder(req.body);
+        res.status(200).json({
+            status: 200,
+            message: "Order created successfully",
+            data: order,
+        });
+    } catch (error) {
+        next(error)
+    }
+}
 
 const userOrdersAsBuyer = async (req, res, next) => {
     try {
@@ -16,4 +29,4 @@ const userOrdersAsBuyer = async (req, res, next) => {
 }
 
 
-export { userOrdersAsBuyer };
+export { userOrdersAsBuyer, createOrder };

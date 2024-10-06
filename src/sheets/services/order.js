@@ -3,7 +3,8 @@ import { authenticate } from "../connect.js";
 import { v4 as uuidv4 } from 'uuid';
 import { google } from 'googleapis';
 
-
+const sheets = google.sheets('v4');
+const SHEET_NAME = 'Orders';
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
 
@@ -72,5 +73,39 @@ const fetchUserOrderByBuyerId = async (id) => {
     }
 };
 
+const insertOrder = (requestBody) => {
+    return new Promise(async (resolve, reject) => {
+      const auth = await authenticate();
+      try {
+        const { productId, userId } = requestBody;
+        const id = uuidv4();
+        const newData = [[id, userId, productId, "Paid"]];
+  
+        const response = await sheets.spreadsheets.values.get({
+          spreadsheetId: SPREADSHEET_ID,
+          range: `${SHEET_NAME}!${"A:A"}`,
+          auth,
+        });
+        const rows = response.data.values.length || 0;
+  
+        const data = await sheets.spreadsheets.values.update({
+          spreadsheetId: SPREADSHEET_ID,
+          range: `${SHEET_NAME}!A${rows + 1}:D${rows + 1}`,
+          valueInputOption: 'RAW',
+          auth,
+          requestBody: {
+            values: newData,
+          },
+        });
+        if (data.status !== 200)
+          return reject(createHttpError[500]());
+        requestBody.id = id;
+        return resolve(requestBody);
+      } catch (err) {
+        console.error('InsertData error:', err);
+        return reject(err)
+      }
+    })
+  }
 
-export { fetchUserOrderByBuyerId };
+export { fetchUserOrderByBuyerId, insertOrder };

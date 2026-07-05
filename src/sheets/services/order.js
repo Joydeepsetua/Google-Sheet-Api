@@ -79,18 +79,19 @@ const insertOrder = (requestBody) => {
       try {
         const { productId, userId } = requestBody;
         const id = uuidv4();
-        const newData = [[id, userId, productId, "Paid"]];
-  
+        const createdAt = new Date().toISOString();
+        const newData = [[id, userId, productId, "Paid", createdAt]];
+
         const response = await sheets.spreadsheets.values.get({
           spreadsheetId: SPREADSHEET_ID,
           range: `${SHEET_NAME}!${"A:A"}`,
           auth,
         });
         const rows = response.data.values.length || 0;
-  
+
         const data = await sheets.spreadsheets.values.update({
           spreadsheetId: SPREADSHEET_ID,
-          range: `${SHEET_NAME}!A${rows + 1}:D${rows + 1}`,
+          range: `${SHEET_NAME}!A${rows + 1}:E${rows + 1}`,
           valueInputOption: 'RAW',
           auth,
           requestBody: {
@@ -100,6 +101,7 @@ const insertOrder = (requestBody) => {
         if (data.status !== 200)
           return reject(createHttpError[500]());
         requestBody.id = id;
+        requestBody.createdAt = createdAt;
         return resolve(requestBody);
       } catch (err) {
         console.error('InsertData error:', err);

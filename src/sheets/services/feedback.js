@@ -25,6 +25,7 @@ const insertFeedback = (requestBody) => {
         deviceModel,
       } = requestBody;
       const id = uuidv4();
+      const createdAt = new Date().toISOString();
       const newData = [[
         id,
         feedbackType,
@@ -37,6 +38,7 @@ const insertFeedback = (requestBody) => {
         buildNumber,
         osVersion,
         deviceModel,
+        createdAt,
       ]];
 
       const response = await sheets.spreadsheets.values.get({
@@ -48,7 +50,7 @@ const insertFeedback = (requestBody) => {
 
       const data = await sheets.spreadsheets.values.update({
         spreadsheetId: SPREADSHEET_ID,
-        range: `${SHEET_NAME}!A${rows + 1}:K${rows + 1}`,
+        range: `${SHEET_NAME}!A${rows + 1}:L${rows + 1}`,
         valueInputOption: 'RAW',
         auth,
         requestBody: {
@@ -58,6 +60,7 @@ const insertFeedback = (requestBody) => {
       if (data.status !== 200)
         return reject(createHttpError[500]());
       requestBody.id = id;
+      requestBody.createdAt = createdAt;
       return resolve(requestBody);
     } catch (err) {
       console.error('InsertFeedback error:', err);
@@ -69,7 +72,7 @@ const insertFeedback = (requestBody) => {
 const fetchFeedbackList = (page = 1, limit = 20) => {
   return new Promise(async (resolve, reject) => {
     const auth = await authenticate();
-    const range = `A:K`;
+    const range = `A:L`;
 
     try {
       const response = await sheets.spreadsheets.values.get({
@@ -101,6 +104,7 @@ const fetchFeedbackList = (page = 1, limit = 20) => {
           buildNumber: feedback[8],
           osVersion: feedback[9],
           deviceModel: feedback[10],
+          createdAt: feedback[11],
         };
       });
 

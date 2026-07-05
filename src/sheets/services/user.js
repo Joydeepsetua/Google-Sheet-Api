@@ -27,10 +27,11 @@ const insertData = (requestBody) => {
                 return reject(createHttpError[409](`${email} is already exist.`));
             }
             const id = uuidv4();
-            const newData = [[id, name, email, age, password]];
+            const createdAt = new Date().toISOString();
+            const newData = [[id, name, email, age, password, createdAt]];
             const data = await sheets.spreadsheets.values.update({
                 spreadsheetId: SPREADSHEET_ID,
-                range: `${SHEET_NAME}!A${rows + 1}:E${rows + 1}`,
+                range: `${SHEET_NAME}!A${rows + 1}:F${rows + 1}`,
                 valueInputOption: 'RAW',
                 auth,
                 requestBody: {
@@ -40,6 +41,7 @@ const insertData = (requestBody) => {
             if (data.status !== 200)
                 return reject(createHttpError[500]());
             requestBody.id = id;
+            requestBody.createdAt = createdAt;
             delete requestBody.password;
             return resolve(requestBody);
         } catch (err) {

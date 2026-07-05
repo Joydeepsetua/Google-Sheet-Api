@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 import userRoute from './src/routes/user.js';
 import orderRoute from './src/routes/order.js';
 import productRoute from './src/routes/product.js';
+import feedbackRoute from './src/routes/feedback.js';
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
@@ -20,6 +21,7 @@ app.get('/helloworld', (req, res) => {
 app.use(userRoute);
 app.use(productRoute);
 app.use(orderRoute);
+app.use(feedbackRoute);
 
 
 // This route does not exist
